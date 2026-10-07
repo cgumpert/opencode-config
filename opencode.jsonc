@@ -51,4 +51,16 @@
       "template": "Push the commits of the current branch with a plain `git push`. Do not name a remote or a branch — let git use the upstream configured for the current branch. If git reports that no upstream is set, report that and ask which remote to use instead of guessing. Show the resulting status.",
     },
   },
+
+  // AWS Knowledge MCP server — remote Streamable HTTP, no AWS account or
+  // credentials required (rate-limited). Searches AWS docs, CDK and
+  // CloudFormation guidance, regional availability, and agent skills.
+  "mcp": {
+    "servers": {
+      "aws-knowledge": {
+        "type": "remote",
+        "url": "https://knowledge-mcp.global.api.aws",
+      },
+    },
+  },
 }
