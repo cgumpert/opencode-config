@@ -46,5 +46,9 @@
       "description": "Commit the staged changes",
       "template": "Inspect the staged changes with `git diff --cached`, write a concise commit message describing what changed and why, then commit with `git commit`.",
     },
+    "push": {
+      "description": "Push the current branch to its upstream remote",
+      "template": "Push the commits of the current branch with a plain `git push`. Do not name a remote or a branch — let git use the upstream configured for the current branch. If git reports that no upstream is set, report that and ask which remote to use instead of guessing. Show the resulting status.",
+    },
   },
 }
