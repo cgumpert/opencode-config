@@ -124,11 +124,20 @@ not.
 
 ## Day-to-day use
 
+Commit changes you make on this machine:
+
 ```sh
 cd ~/.config/opencode
 git add -A
 git commit -m "describe the change"
 git push
+```
+
+Pick up changes made on another machine. Run this before editing if the repo
+may have moved forward — a local change blocks the pull until it is committed:
+
+```sh
+git -C ~/.config/opencode pull --rebase
 ```
 
 The pre-commit hook runs automatically; if it blocks a commit it prints the
