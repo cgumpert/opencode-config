@@ -1,0 +1,6 @@
+# Machine-local: background service auth password, regenerated per environment.
+service.json
+
+# Editor / OS noise
+*.swp
+.DS_Store
