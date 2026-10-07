@@ -60,10 +60,22 @@ it:
 
 ```sh
 cd ~/.config/opencode
-curl -sSf -o .git/hooks/pre-commit <raw-url> && chmod +x .git/hooks/pre-commit
+cat > .git/hooks/pre-commit <<'EOF'
+#!/bin/sh
+# Refuse to commit anything that looks like a credential.
+fail=0
+for f in "$@"; do
+  [ -f "$f" ] || continue
+  if grep -nEi '(sk-[A-Za-z0-9_-]{16,}|(api[_-]?key|secret|password|token)["'"'"']?[[:space:]]*[:=][[:space:]]*"[^"]{12,})' "$f"; then
+    echo "pre-commit: possible secret in $f (shown above)" >&2
+    fail=1
+  fi
+done
+[ "$fail" -eq 0 ] || { echo "Commit blocked. Move the value to an {env:NAME} reference or drop the file." >&2; exit 1; }
+exit 0
+EOF
+chmod +x .git/hooks/pre-commit
 ```
-
-Or copy it across from the machine it already exists on.
 
 ## Verifying the installation
 
