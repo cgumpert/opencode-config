@@ -20,7 +20,7 @@ configuration. If `$XDG_CONFIG_HOME` is set, OpenCode reads
 Clone it there:
 
 ```sh
-git clone <url> ~/.config/opencode
+git clone git@github.com:cgumpert/opencode-config.git ~/.config/opencode
 ```
 
 If the directory already exists (a fresh machine often has one), either clone
@@ -29,9 +29,15 @@ into a temp dir and move the files in, or init and pull:
 ```sh
 cd ~/.config/opencode
 git init
-git remote add origin <url>
+git remote add origin git@github.com:cgumpert/opencode-config.git
 git pull --rebase origin main
 ```
+
+Both examples use SSH, which requires the machine's GitHub key to be set up
+already. If you prefer HTTPS, use
+`https://github.com/cgumpert/opencode-config.git` instead — GitHub accepts the
+URL with or without the trailing `.git` — and let your GitHub credential helper
+handle authentication. Never put a token in this repository.
 
 A wrong checkout path means OpenCode silently uses its defaults — nothing
 errors, your settings just don't apply.
@@ -113,6 +119,7 @@ not.
 cd ~/.config/opencode
 git add -A
 git commit -m "describe the change"
+git push
 ```
 
 The pre-commit hook runs automatically; if it blocks a commit it prints the
