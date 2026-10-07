@@ -9,5 +9,42 @@
   // and are ignored if placed here.
   "plugins": [
     "@plannotator/opencode@latest"
-  ]
+  ],
+
+  // Format files after write/edit/patch. Runs a built-in only when its
+  // executable or project dependency is present, so this is a no-op in
+  // projects with no matching formatter.
+  "formatter": true,
+
+  // Don't let build output trigger filesystem updates and snapshot churn.
+  "watcher": {
+    "ignore": [
+      "dist/**",
+      "build/**",
+      "coverage/**",
+      "node_modules/**",
+      "*.lock",
+    ],
+  },
+
+  // Compact long sessions automatically instead of waiting for a manual
+  // /compact that you'll forget to run.
+  "compaction": {
+    "auto": true,
+    "keep": { "tokens": 15000 },
+    "buffer": 20000,
+  },
+
+  // Base policy is already "* allow", so this is a pure guardrail: the
+  // last matching rule wins, and nothing re-allows it.
+  "permissions": [
+    { "action": "shell", "resource": "sudo *", "effect": "deny" },
+  ],
+
+  "commands": {
+    "commit": {
+      "description": "Commit the staged changes",
+      "template": "Inspect the staged changes with `git diff --cached`, write a concise commit message describing what changed and why, then commit with `git commit`.",
+    },
+  },
 }
