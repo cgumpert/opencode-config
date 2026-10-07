@@ -46,8 +46,8 @@ errors, your settings just don't apply.
 
 | Path | Purpose |
 | --- | --- |
-| `opencode.json` | Global server/project config: plugins, model, permissions, agents, MCP, skills, … |
-| `cli.json` | Terminal-only preferences: theme, keybindings, sessions, tabs. Never put these in `opencode.json`. |
+| `opencode.jsonc` | Global server/project config: plugins, model, permissions, agents, MCP, skills, … JSONC, so it may contain `//` comments. |
+| `cli.json` | Terminal-only preferences: theme, keybindings, sessions, tabs. Never put these in `opencode.jsonc`. Plain JSON only — OpenCode documents `cli.json`, not a `.jsonc` variant. |
 | `commands/*.md` | Custom slash commands. |
 
 ## What is deliberately not in here
@@ -88,11 +88,20 @@ chmod +x .git/hooks/pre-commit
 ```sh
 cd ~/.config/opencode
 git status            # clean tree, service.json absent
-ls                    # opencode.json cli.json commands/
+ls                    # opencode.jsonc cli.json commands/
 ```
 
-Then start OpenCode and check that your commands and plugin load. If the
-plugin is missing, you are probably in the wrong directory — confirm with:
+Then start OpenCode and check that your commands and plugin load. To confirm
+OpenCode actually discovered the config file (a typo in the filename fails
+silently), list the configuration sources:
+
+```sh
+opencode debug config
+```
+
+The output should include a `document` entry whose `path` is
+`~/.config/opencode/opencode.jsonc`. If it is missing, check the path and the
+filename. Other failures to check for:
 
 ```sh
 opencode api get /api/info
@@ -103,9 +112,9 @@ opencode api get /api/info
 This repository only supplies **global** configuration. OpenCode merges config
 files from lowest to highest precedence:
 
-1. `~/.config/opencode/opencode.json` (this repo)
-2. ancestor `opencode.json` files, farthest first
-3. `.opencode/opencode.json` files, farthest first (these override everything
+1. `~/.config/opencode/opencode.jsonc` (this repo)
+2. ancestor `opencode.json(c)` files, farthest first
+3. `.opencode/opencode.json(c)` files, farthest first (these override everything
    above)
 
 Keep anything team-shared or project-specific in that project's own repository,

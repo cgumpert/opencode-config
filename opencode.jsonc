@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // Global OpenCode configuration — applies to every project for this user.
+  // Merged below project config: ancestor opencode.json(c) files override
+  // these settings, and .opencode/opencode.json(c) files override those.
+  //
+  // Terminal-only preferences (theme, keybinds, sessions) live in cli.json
+  // and are ignored if placed here.
+  "plugins": [
+    "@plannotator/opencode@latest"
+  ]
+}
