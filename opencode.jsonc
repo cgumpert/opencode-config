@@ -52,14 +52,15 @@
     },
   },
 
-  // AWS Knowledge MCP server — remote Streamable HTTP, no AWS account or
-  // credentials required (rate-limited). Searches AWS docs, CDK and
-  // CloudFormation guidance, regional availability, and agent skills.
+  // Official AWS MCP server. Searches AWS docs, CDK and CloudFormation guidance,
+  // regional availability, and agent skills. Can retrieve service information,
+  // execute AWS API calls and run Python scripts in sandboxed environments
+  // using  existing IAM credentials.
   "mcp": {
     "servers": {
-      "aws-knowledge": {
+      "aws": {
         "type": "remote",
-        "url": "https://knowledge-mcp.global.api.aws",
+        "url": "https://aws-mcp.eu-central-1.api.aws/mcp",
       },
     },
   },
