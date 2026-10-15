@@ -52,12 +52,12 @@
     },
   },
 
-  // Official AWS MCP server. Searches AWS docs, CDK and CloudFormation guidance,
-  // regional availability, and agent skills. Can retrieve service information,
-  // execute AWS API calls and run Python scripts in sandboxed environments
-  // using  existing IAM credentials.
   "mcp": {
     "servers": {
+      // Official AWS MCP server. Searches AWS docs, CDK and CloudFormation guidance,
+      // regional availability, and agent skills. Can retrieve service information,
+      // execute AWS API calls and run Python scripts in sandboxed environments
+      // using  existing IAM credentials.
       "aws": {
         "type": "remote",
         "url": "https://aws-mcp.eu-central-1.api.aws/mcp",
