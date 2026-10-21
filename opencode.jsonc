@@ -80,14 +80,31 @@
         ],
       },
 
-      // Official Github MCP server
+      // Github MCP server — local stdio server authenticated as a GitHub App,
+      // so agent actions (comments, reviews, issues, PRs) are attributed to
+      // <app-name>[bot] instead of me personally. The server mints and
+      // auto-refreshes installation tokens internally; the private key is
+      // mounted read-only into the container and never enters config or env.
+      // NOTE: the remote server (https://api.githubcopilot.com/mcp/) cannot
+      // use GitHub App auth — it only accepts a static PAT/OAuth bearer token.
+      //
+      // The app needs permissions matching its toolsets (e.g. Contents,
+      // Issues, Pull requests: Read & write). Default toolsets are
+      // context, repos, issues, pull_requests, users; add more with
+      // "-e", "GITHUB_TOOLSETS=default,actions,code_security" if needed.
       "github": {
-	"type": "remote",
-        "url": "https://api.githubcopilot.com/mcp/",
-        "oauth": false,
-        "headers": {
-          "Authorization": "Bearer {env:GITHUB_PAT}"
-        },
+        "type": "local",
+        "command": [
+          "docker", "run", "-i", "--rm",
+          // Absolute path: docker resolves relative bind mounts against the
+          // session's working directory, so a relative path would only work
+          // from sessions located in this directory.
+          "-v", "{env:GITHUB_APP_PRIVATE_KEY_PEM}:/secrets/github-app.pem:ro",
+          "-e", "GITHUB_APP_ID={env:GITHUB_APP_ID}",
+          "-e", "GITHUB_APP_INSTALLATION_ID={env:GITHUB_APP_INSTALLATION_ID}",
+          "-e", "GITHUB_APP_PRIVATE_KEY_PATH=/secrets/github-app.pem",
+          "ghcr.io/github/github-mcp-server:v2.0.3",
+        ],
       },
     },
   },
