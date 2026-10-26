@@ -1,6 +1,9 @@
 # Machine-local: background service auth password, regenerated per environment.
 service.json
 
+# Private keys must never be committed (e.g. the GitHub App .pem).
+*.pem
+
 # Editor / OS noise
 *.swp
 .DS_Store
