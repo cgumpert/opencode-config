@@ -49,6 +49,7 @@ errors, your settings just don't apply.
 | `opencode.jsonc` | Global server/project config: plugins, model, permissions, agents, MCP, skills, … JSONC, so it may contain `//` comments. |
 | `cli.json` | Terminal-only preferences: theme, keybindings, sessions, tabs. Never put these in `opencode.jsonc`. Plain JSON only — OpenCode documents `cli.json`, not a `.jsonc` variant. |
 | `commands/*.md` | Custom slash commands. |
+| `scripts/` | Versioned helper scripts: `pre-commit.sh` (credential-blocking git hook) and `opencode-agent.sh` (bot-identity launcher for OpenCode). Install steps below. |
 
 ## What is deliberately not in here
 
@@ -59,31 +60,19 @@ errors, your settings just don't apply.
 - **`~/.config/opencode/auth*` and credentials** — OAuth tokens and API keys
   are stored outside this repository. Reference secrets as `{env:NAME}` in
   config instead of writing literal values.
-- **`~/.local/bin/opencode-agent`** — the bot-identity launcher for OpenCode.
-  Machine-local, outside the repo, documented in
-  [Bot identity for agent commits](#bot-identity-for-agent-commits-github-app)
-  below.
+- **Installed copies of `scripts/`** — the launcher and the git hook are
+  versioned here, but their live locations (`~/.local/bin/opencode-agent`,
+  `.git/hooks/pre-commit`) are machine-local; git does not track them.
+  Install steps: below and in
+  [Bot identity for agent commits](#bot-identity-for-agent-commits-github-app).
 
 `.git/hooks/pre-commit` blocks commits containing anything that looks like a
-credential. Hooks are not versioned by git, so after a fresh clone re-install
-it:
+credential. The hook is versioned at `scripts/pre-commit.sh`; git does not
+look inside `.git/hooks`, so install it after a fresh checkout:
 
 ```sh
 cd ~/.config/opencode
-cat > .git/hooks/pre-commit <<'EOF'
-#!/bin/sh
-# Refuse to commit anything that looks like a credential.
-fail=0
-for f in "$@"; do
-  [ -f "$f" ] || continue
-  if grep -nEi '(sk-[A-Za-z0-9_-]{16,}|(api[_-]?key|secret|password|token)["'"'"']?[[:space:]]*[:=][[:space:]]*"[^"]{12,})' "$f"; then
-    echo "pre-commit: possible secret in $f (shown above)" >&2
-    fail=1
-  fi
-done
-[ "$fail" -eq 0 ] || { echo "Commit blocked. Move the value to an {env:NAME} reference or drop the file." >&2; exit 1; }
-exit 0
-EOF
+cp scripts/pre-commit.sh .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
 ```
 
@@ -155,42 +144,25 @@ Apps → the app):
 GitHub links a commit to the bot account only when the email matches this
 address exactly; any other address renders as literal text with no avatar.
 The numeric id is stable, but **renaming the app changes the login** — after
-a rename, redo steps 1 and 3 and update the wrapper and the alias below.
+a rename, redo steps 1 and 3 and update `APP_SLUG` and `BOT_ID` in the
+launcher script below.
 
 ### Launcher: wrapper script
 
-`~/.local/bin/opencode-agent` (`~/.local/bin` is on PATH). Replace the
-placeholders with the values derived above:
+The launcher is versioned at `scripts/opencode-agent.sh`. Configure it for
+your app — set `APP_SLUG` and `BOT_ID` at the top of the file — then install
+it to a directory on PATH:
 
 ```sh
-#!/usr/bin/env bash
-export GIT_AUTHOR_NAME='<app-slug>[bot]'
-export GIT_AUTHOR_EMAIL='<bot-id>+<app-slug>[bot]@users.noreply.github.com'
-export GIT_COMMITTER_NAME='<app-slug>[bot]'
-export GIT_COMMITTER_EMAIL='<bot-id>+<app-slug>[bot]@users.noreply.github.com'
-exec opencode "$@"
-```
-
-```sh
+cd ~/.config/opencode
+cp scripts/opencode-agent.sh ~/.local/bin/opencode-agent
 chmod +x ~/.local/bin/opencode-agent
 opencode-agent      # instead of: opencode
 ```
 
-### Launcher: alias (optional)
-
-Bash refuses to expand an alias whose replacement starts with itself, so
-wrapping the command name sets the variables only for the OpenCode process —
-`git commit` typed next to it is untouched:
-
-```sh
-# ~/.bashrc
-alias opencode='GIT_AUTHOR_NAME="<app-slug>[bot]" GIT_AUTHOR_EMAIL="<bot-id>+<app-slug>[bot]@users.noreply.github.com" GIT_COMMITTER_NAME="<app-slug>[bot]" GIT_COMMITTER_EMAIL="<bot-id>+<app-slug>[bot]@users.noreply.github.com" opencode'
-```
-
-Interactive shells get the alias; non-interactive launches (scripts, launch
-configs, cron) do not — use `opencode-agent` for those. Plain `opencode`
-started without either launcher falls back to my personal identity, which
-is the intended safety default.
+The script refuses to start while the placeholders are still in place. Plain
+`opencode` started without the launcher falls back to my personal identity,
+which is the intended safety default.
 
 ### Why the launcher, not the service environment
 
