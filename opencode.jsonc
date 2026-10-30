@@ -89,9 +89,7 @@
       // use GitHub App auth — it only accepts a static PAT/OAuth bearer token.
       //
       // The app needs permissions matching its toolsets (e.g. Contents,
-      // Issues, Pull requests: Read & write). Default toolsets are
-      // context, repos, issues, pull_requests, users; add more with
-      // "-e", "GITHUB_TOOLSETS=default,actions,code_security" if needed.
+      // Issues, Pull requests: Read & write).
       "github": {
         "type": "local",
         "command": [
@@ -103,6 +101,7 @@
           "-e", "GITHUB_APP_ID={env:GITHUB_APP_ID}",
           "-e", "GITHUB_APP_INSTALLATION_ID={env:GITHUB_APP_INSTALLATION_ID}",
           "-e", "GITHUB_APP_PRIVATE_KEY_PATH=/secrets/github-app.pem",
+          "-e", "GITHUB_TOOLSETS=default,actions",
           "ghcr.io/github/github-mcp-server:v2.0.3",
         ],
       },
