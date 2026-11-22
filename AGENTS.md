@@ -1,7 +1,12 @@
 # Tools
 
 - Use the Github MCP server to interact with Github, instead of using the github CLI (gh).
+- GitHub MCP tool names: read issues with `github.issue_read` (`method: "get"`,
+  `"get_comments"`, `"get_sub_issues"`, `"get_parent"`, `"get_labels"`); create/update
+  with `github.issue_write`. `get_issue`, `create_issue`, `update_issue` and
+  `get_issue_comments` no longer exist in github-mcp-server v2.
 - Use the terraform MCP server to answer questions about Terraform providers, ressources and documentation.
+- Use the plannotator plugin to present your plan also when being in plan mode.
 
 # git usage — mandatory workflow, in this order
 
@@ -11,7 +16,7 @@ Before touching any file, always:
    default branch only if it resolves to the same commit as `origin/main`), unless told otherwise.
 2. **Create a dedicated branch in a worktree under the git root**:
    `git worktree add --no-track <git-root>/worktrees/<branch-name> -b <branch-name> <base>`.
-   Branch names are short and descriptive (`feature/...`, `fix/...`, `issue/<n>-...`).
+   Branch names are short and descriptive and should follow the pattern `issue/<issue-number>-...` whenever possible.
 3. **Move the session into the worktree** (e.g. `tools.opencode.session_move`), then do *all* work there: analysis,
    edits, verification (`pre-commit`, `terraform test`, `pytest`), commits and pushes.
 
@@ -23,3 +28,5 @@ Rules:
 - Within an existing worktree, new branches still follow `"git checkout -b <new_branch> <base_branch> --no-track"`.
 - Periodically clean up worktrees whose branch is gone: `git worktree remove <git-root>/worktrees/<branch-name>` and
   delete the branch (`git branch -d ...`) if it is merged.
+- When replying to PR review, respond to individual review comments and add a summary about your changes as new comment,
+  not as an update of the PR body.
