@@ -6,6 +6,7 @@
   with `github.issue_write`. `get_issue`, `create_issue`, `update_issue` and
   `get_issue_comments` no longer exist in github-mcp-server v2.
 - Use the terraform MCP server to answer questions about Terraform providers, ressources and documentation.
+- Use the plannotator plugin to present your plan also when being in plan mode.
 
 # git usage — mandatory workflow, in this order
 
