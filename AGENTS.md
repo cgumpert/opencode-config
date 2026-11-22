@@ -1,6 +1,10 @@
 # Tools
 
 - Use the Github MCP server to interact with Github, instead of using the github CLI (gh).
+- GitHub MCP tool names: read issues with `github.issue_read` (`method: "get"`,
+  `"get_comments"`, `"get_sub_issues"`, `"get_parent"`, `"get_labels"`); create/update
+  with `github.issue_write`. `get_issue`, `create_issue`, `update_issue` and
+  `get_issue_comments` no longer exist in github-mcp-server v2.
 - Use the terraform MCP server to answer questions about Terraform providers, ressources and documentation.
 
 # git usage — mandatory workflow, in this order
